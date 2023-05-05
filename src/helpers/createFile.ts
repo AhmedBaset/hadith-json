@@ -20,7 +20,7 @@ async function createFile(mainDir: string[] = ["db"], path: string[], fileName: 
 	// const textContent = JSON.stringify(data, null, 2); //? For pretty JSON
 	
 	// Exit if file already exists
-	// if (existsSync(resolvedPath)) return
+	if (existsSync(resolvedPath)) return
 
 	// Write content to file
 	await writeFile(resolvedPath, textContent);
