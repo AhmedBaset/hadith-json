@@ -1,4 +1,6 @@
-# Hadith-json Database (Hadith of the Prophet Muhammad (PBUH))
+# Hadith-json Database [1.1.0]
+
+Hadith is the second source of Islamic law after the Quran. It is the sayings and actions of Prophet Muhammed (PBUH).
 
 An extensive JSON-formatted database is available, containing the Hadiths - Prophet Muhammed's (PBUH) sayings and actions - in both Arabic and English. The database encompasses 17 books of Hadiths.
 
@@ -26,73 +28,86 @@ An extensive JSON-formatted database is available, containing the Hadiths - Prop
 
 ## Stack:
 
-- Node.js
-- TypeScript
-- Cheerio.js
+-  Node.js
+-  TypeScript
+-  Cheerio.js
+-  Axios
+-  cli-progress
 
-## Data Source: 
+## Data Source:
 
 The data was scrapped from [Sunnah.com](https://sunnah.com/), and was converted to JSON format using a custom script. All scripts are available in the `src` folder.
 
 ## Data Format:
 
-Every `*.json` file is typed as `BookData` interface, which is defined as follows:
+The data is available in two formats:
+
+1. By Book: The Hadiths are grouped by book. See all Books in the [`db/by_book`](./db/by_book) folder.
+1. By Chapter: The Hadiths are grouped by chapter. See all Chapters in the [`db/by_chapter`](./db/by_chapter) folder.
+1. Next INSHALLAH will add more formats.
+
+See all Types in the [`types/index.d.ts`](./types/index.d.ts) file.
+
+Every Hadih is an object with the following format:
 
 ```typescript
-interface BookData {
-	metadata: Prettify<Metadata>;
-	hadiths: Hadith[];
-	chapter: Chapter | undefined;
-}
-
 interface Hadith {
 	id: number;
+	chapterId: number;
+	bookId: number;
 	arabic: string;
 	english: {
 		narrator: string;
 		text: string;
 	};
-	chapterId: number;
 }
 ```
 
-See more information in the [`types/index.d.ts`](./types/index.d.ts) file.
+## Commands:
 
-## Commands: 
-
-- `npm install` - Installs the dependencies.
-- `npm run build` - Compiles the TypeScript files to JavaScript.
-- `npm run start` - Starts the script that scrapes the data from Sunnah.com.
-- `npm run dev:build` - Compiles the TypeScript files to JavaScript in watch mode.
-- `npm run dev:start` - Starts the script that scrapes the data from Sunnah.com in watch mode.
+-  `npm install` - Installs the dependencies.
+-  `npm run build` - Compiles the TypeScript files to JavaScript.
+-  `npm run start` - Starts the script that scrapes the data from Sunnah.com.
+-  `npm run dev:build` - Compiles the TypeScript files to JavaScript in watch mode.
+-  `npm run dev:start` - Starts the script that scrapes the data from Sunnah.com in watch mode.
 
 ## Project Structure:
 
 ```
 .
 ├── db
+│   ├── by_book
+│   │   │   ├── the_9_books
+│   │   │   │   ├── bukhari.json
+│   │   │   │   ├── muslim.json
+│   │   │   │   ├── ...
+│   │   │   ├── forties
+│   │   │   │   ├── nawawi40.json
+│   │   │   │   ├── ...
+│   │   │   ├── ...
 │   ├── by_chapter
 │   │   ├── the_9_books
-|   |   |   ├── bukhari
-|   |   |   |   ├── 1.json
-|   |   |   |   ├── 2.json
-|   |   |   |   ├── ...
-|   |   |   ├── muslim
-|   |   |   |   ├── ...
-|   |   |   ├── ...
+│   │   │   ├── bukhari
+│   │   │   │   ├── 1.json
+│   │   │   │   ├── 2.json
+│   │   │   │   ├── ...
+│   │   │   ├── muslim
+│   │   │   │   ├── ...
+│   │   │   ├── ...
 │   │   ├── forties
-|   |   |   ├── nawawi40
-|   |   |   |   ├── 1.json
-|   |   |   |   ...
-|   |   |   other_books
-|   |   |   |   RyadSalihin
-|   |   |   |   |   ├── 1.json
-|   |   ...
-|   src
-|   |   ├── index.ts
-|   |   ├── types
-|   |   ├── helpers
-|   ...
+│   │   │   ├── nawawi40
+│   │   │   │   ├── 1.json
+│   │   │   │   ...
+│   │   │   other_books
+│   │   │   │   RyadSalihin
+│   │   │   │   │   ├── 1.json
+│   │   ...
+│   ├── by_book
+│   src
+│   │   ├── index.ts
+│   │   ├── types
+│   │   ├── helpers
+│   ...
 ```
 
 ## Contributing:
