@@ -14,11 +14,13 @@
 	"license": "ISC",
 	"devDependencies": {
 		"@types/cheerio": "^0.22.31",
+		"@types/cli-progress": "^3.11.0",
 		"@types/node": "^18.16.3",
 		"typescript": "^5.0.4"
 	},
 	"dependencies": {
 		"axios": "^1.4.0",
-		"cheerio": "^1.0.0-rc.12"
+		"cheerio": "^1.0.0-rc.12",
+		"cli-progress": "^3.12.0"
 	}
 }
