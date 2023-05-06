@@ -24,7 +24,7 @@ async function createFile(mainDir: string[] = ["db"], path: string[], fileName: 
 
 	// Write content to file
 	await writeFile(resolvedPath, textContent);
-	console.info(`File "${path.join("/")}/${fileName}.json" created!`)
+	// console.info(`File "${path.join("/")}/${fileName}.json" created!`)
 }
 
 export default createFile;

@@ -3,10 +3,22 @@ import { scrapeData } from "./helpers/scrapeData";
 import createDirs from "./helpers/createDirs";
 import createFile from "./helpers/createFile";
 import { formatFile } from "./helpers/formatFile";
+import { SingleBar, Presets } from "cli-progress";
 
 async function handleByChapterFolder() {
 	//* For Each Book (Bukhari, Muslim, etc.)
 	for (const book of books) {
+		//* Create Progress Bar
+		const bar = new SingleBar(
+			{
+				format: `{value}/{total} | {bar} {percentage}% | {book}`,
+				hideCursor: true,
+				stopOnComplete: true,
+			},
+			Presets.shades_classic
+		);
+		bar.start(book.route.chapters.length, 0, { book: book.english.title });
+
 		//* Create Directories ./data/${book}/
 		await createDirs(["db", "by_chapter"], ...book.path);
 
@@ -30,6 +42,11 @@ async function handleByChapterFolder() {
 				`${index + 1}`,
 				formattedData
 			);
+
+			//* Update Progress Bar
+			bar.update(index + 1, {
+				book: `${book.english.title} | ${data.chapter?.english}`,
+			});
 		}
 	}
 }

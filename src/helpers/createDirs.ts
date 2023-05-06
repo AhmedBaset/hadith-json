@@ -18,7 +18,7 @@ const createDirs = async (mainDir: string[] = ["db"], ...dirs: string[]) => {
 	await mkdir(resolvedPath, { recursive: true });
 
 	// Feedback
-	console.info(`Folder "${dirs.join("/")}" created!`);
+	// console.info(`Folder "${dirs.join("/")}" created!`);
 };
 
 export default createDirs;
