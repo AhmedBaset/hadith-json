@@ -4,14 +4,14 @@ import createDirs from "./helpers/createDirs";
 import createFile from "./helpers/createFile";
 import { formatFile } from "./helpers/formatFile";
 
-async function main() {
+async function handleByChapterFolder() {
 	//* For Each Book (Bukhari, Muslim, etc.)
-	books.forEach(async (book) => {
+	for (const book of books) {
 		//* Create Directories ./data/${book}/
 		await createDirs(["db", "by_chapter"], ...book.path);
 
 		//* For Each Chapter in Book (1st, 2nd, etc.)
-		book.route.chapters.forEach(async (chapter, index) => {
+		for (const [index, chapter] of book.route.chapters.entries()) {
 			//* Get Data From `${URL}/${book}/${chapter}`
 			const data = await scrapeData(`${book.route.base}/${chapter}`);
 			if (!data)
@@ -30,8 +30,12 @@ async function main() {
 				`${index + 1}`,
 				formattedData
 			);
-		});
-	});
+		}
+	}
+}
+
+async function main() {
+	await handleByChapterFolder();
 }
 
 main();
