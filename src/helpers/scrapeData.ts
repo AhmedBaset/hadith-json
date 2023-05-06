@@ -1,7 +1,7 @@
 import axios from "axios";
 import cheerio from "cheerio";
 
-export async function scrapeData(route: string) {
+export async function scrapeData(route: string, bookId: number) {
 	//* GET HTML content
 	const data = await axios
 		.get(`https://sunnah.com/${route}`, {
@@ -67,6 +67,7 @@ export async function scrapeData(route: string) {
 					.replace(/\[.*\]/g, ""),
 			},
 			chapterId: +chapterInfo.id,
+			bookId,
 		};
 
 		output.hadiths.push(text);
@@ -90,11 +91,12 @@ export async function scrapeData(route: string) {
 
 		output.chapter = {
 			id: +chapterInfo.id,
+			bookId,
 			arabic: chapterInfo.arabic,
 			english: chapterInfo.english,
 		};
 	} else {
-		console.log("No Introduction ", `${route}`);
+		// console.log("No Introduction ", `${route}`);
 	}
 
 	return output;

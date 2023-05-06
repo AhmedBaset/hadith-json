@@ -5,8 +5,8 @@ export function formatFile(
 		hadiths: Hadith[];
 		chapter?: Chapter;
 	}
-): Prettify<BookData> {
-	const output: Prettify<BookData> = {
+): Prettify<ChapterFile> {
+	const output: Prettify<ChapterFile> = {
 		metadata: {
 			length: data.hadiths.length,
 			arabic: {
