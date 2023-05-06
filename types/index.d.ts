@@ -10,6 +10,7 @@ declare interface Hadith {
 		text: string;
 	};
 	chapterId: number;
+	bookId: number;
 }
 
 interface Introduction {
@@ -19,6 +20,7 @@ interface Introduction {
 
 interface Chapter {
 	id: number;
+	bookId: number;
 	arabic: string;
 	english: string;
 }
@@ -29,17 +31,26 @@ interface BookInfo {
 	introduction: string | undefined;
 }
 
-declare interface Metadata {
+interface Metadata {
 	length: number;
 	arabic: Prettify<BookInfo>;
 	english: Prettify<BookInfo>;
 }
 
-interface BookData {
+interface ChapterFile {
 	id?: number;
 	metadata: Prettify<Metadata>;
 	hadiths: Hadith[];
 	chapter: Chapter | undefined;
+}
+
+interface BookMetadata extends Omit<ScrapedBook, "path" | "route"> {}
+
+interface BookFile {
+	id: number;
+	metadata: Prettify<Metadata>;
+	chapters: Chapter[];
+	hadiths: Hadith[];
 }
 
 interface ScrapedBook {
