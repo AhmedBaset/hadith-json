@@ -49,6 +49,7 @@ export async function scrapeData(route: string, bookId: number) {
 	allHadiths.each((i, el) => {
 		const text = {
 			id: i + 1,
+			idInBook: i + 1,
 			arabic: $(el)
 				.find(".arabic_hadith_full")
 				.text()
