@@ -4,6 +4,7 @@ declare type Prettify<T> = {
 
 declare interface Hadith {
 	id: number;
+	idInBook: number;
 	arabic: string;
 	english: {
 		narrator: string;
