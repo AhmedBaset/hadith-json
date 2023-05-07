@@ -1,10 +1,14 @@
-# Hadith-json Database [1.1.0]
+# Hadith-json Database [1.2.0]
 
 Hadith is the second source of Islamic law after the Quran. It is the sayings and actions of Prophet Muhammed (PBUH).
 
 An extensive JSON-formatted database is available, containing the Hadiths - Prophet Muhammed's (PBUH) sayings and actions - in both Arabic and English. The database encompasses 17 books of Hadiths.
 
 قاعدة بيانات شاملة بصيغة JSON، تحتوي على الأحاديث النبوية الشريفة باللغتين العربية والإنجليزية. تشمل القاعدة 17 كتاباً من كتب السنة النبوية.
+
+## Hadiths Count:
+
+-  Total Hadiths: 50,884 Hadiths.
 
 ## Books included:
 
