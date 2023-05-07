@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 import { books } from "./books";
 import { scrapeData } from "./helpers/scrapeData";
 import createDirs from "./helpers/createDirs";
@@ -7,29 +9,43 @@ import { SingleBar, Presets } from "cli-progress";
 import { readdir } from "fs/promises";
 import path from "path";
 import { existsSync } from "fs";
+import { consoleColor } from "./helpers/consoleColor";
+
 
 try {
 	main();
 } catch (error) {
 	console.trace(error);
 }
-	
+
 async function main() {
 	const START_TIME = Date.now();
 
-	console.log("Working on [db/by_chapter] folder...");
-	await handleByChapterFolder();
-	console.log(
-		`Done with [db/by_chapter] folder in ${
-			(Date.now() - START_TIME) / 1000
-		}s\n`
-	);
+	consoleColor("fg.white", "--------------------------------");
+	consoleColor("bg.cyan", "Welcome in the Hadith-DB-Scraper");
+	consoleColor("fg.blue", "--------------------------------");
+	consoleColor("fg.green", "By default, You have to choose what functions to run");
+	consoleColor("fg.magenta", "Go to src/index.ts and uncomment the functions you want to run");
+	consoleColor("fg.yellow", "You can find it in the main() function");
+	consoleColor("fg.white", "--------------------------------");
 
-	console.log("Working on [db/by_book] folder...");
-	await handleByBookFolder();
-	console.log(
-		`Done with [db/by_book] folder in ${(Date.now() - START_TIME) / 1000}s`
-	);
+	// console.log("Working on [db/by_chapter] folder...");
+	// await handleByChapterFolder();
+	// console.log(
+	// 	`Done with [db/by_chapter] folder in ${
+	// 		(Date.now() - START_TIME) / 1000
+	// 	}s\n`
+	// );
+
+	// console.log("Working on [db/by_book] folder...");
+	// await handleByBookFolder();
+	// console.log(
+	// 	`Done with [db/by_book] folder in ${(Date.now() - START_TIME) / 1000}s`
+	// );
+
+	// console.log("Deploying to MongoDB");
+	// await deployToMongoDB();
+	// console.log(`Done MongoDB in ${(Date.now() - START_TIME) / 1000}s`);
 }
 
 async function handleByChapterFolder() {
@@ -56,7 +72,18 @@ async function handleByChapterFolder() {
 				book: `${book.english.title} | ${chapter}`,
 			});
 
-			if (existsSync(path.join(process.cwd(), "db", "by_chapter", ...book.path, `${index + 1}.json`))) continue;
+			if (
+				existsSync(
+					path.join(
+						process.cwd(),
+						"db",
+						"by_chapter",
+						...book.path,
+						`${index + 1}.json`
+					)
+				)
+			)
+				continue;
 
 			//* Get Data From `${URL}/${book}/${chapter}`
 			const data = await scrapeData(
@@ -84,6 +111,8 @@ async function handleByChapterFolder() {
 }
 
 async function handleByBookFolder() {
+	let GENERAL_ID = 1;
+
 	for (const book of books) {
 		//* Create Progress Bar
 		const bar = new SingleBar(
@@ -123,7 +152,7 @@ async function handleByBookFolder() {
 			hadiths: [],
 		};
 
-		let hadithId = 1;
+		let idInBook = 1;
 		for (const [index, chapterFileName] of bookDirFiles.entries()) {
 			const chapterData: ChapterFile = require(path.join(
 				bookDir,
@@ -142,7 +171,8 @@ async function handleByBookFolder() {
 			bookData.hadiths.push(
 				...chapterData.hadiths.map((hadith: Prettify<Hadith>) => ({
 					...hadith,
-					id: hadithId++,
+					id: GENERAL_ID++,
+					idInBook: idInBook++,
 					bookId: book.id,
 					chapterId: index + 1,
 				}))
@@ -165,4 +195,53 @@ async function handleByBookFolder() {
 			bookData
 		);
 	}
+}
+
+async function deployToMongoDB() {
+	const { MongoClient } = await import("mongodb");
+
+	const uri = process.env.MONGODB_URI;
+	if (!uri) throw new Error("No MongoDB URI provided");
+
+	const client = new MongoClient(uri);
+
+	const db = client.db("hadiths");
+
+	const hadiths = db.collection("hadiths");
+
+	const folders = await readdir(path.join(process.cwd(), "db", "by_book"));
+
+	const bar = new SingleBar(
+		{
+			format: `{value}/{total} | {bar} {percentage}% | {book}`,
+			hideCursor: true,
+			stopOnComplete: true,
+		},
+		Presets.shades_classic
+	);
+
+	for (const folder of folders) {
+		const books = await readdir(
+			path.join(process.cwd(), "db", "by_book", folder)
+		);
+
+		bar.start(books.length, 0, { book: `${folder}` });
+
+		for (const [index, book] of books.entries()) {
+			const bookData: Prettify<BookFile> = require(path.join(
+				process.cwd(),
+				"db",
+				"by_book",
+				folder,
+				book
+			));
+
+			await hadiths.insertMany(bookData.hadiths);
+
+			bar.update(index + 1, {
+				book: `${bookData.metadata.english.title}`,
+			});
+		}
+	}
+	return client.close();
 }
