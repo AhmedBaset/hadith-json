@@ -24,8 +24,14 @@ async function main() {
 	consoleColor("fg.white", "--------------------------------");
 	consoleColor("bg.cyan", "Welcome in the Hadith-DB-Scraper");
 	consoleColor("fg.blue", "--------------------------------");
-	consoleColor("fg.green", "By default, You have to choose what functions to run");
-	consoleColor("fg.magenta", "Go to src/index.ts and uncomment the functions you want to run");
+	consoleColor(
+		"fg.green",
+		"By default, You have to choose what functions to run"
+	);
+	consoleColor(
+		"fg.magenta",
+		"Go to src/index.ts and uncomment the functions you want to run"
+	);
 	consoleColor("fg.yellow", "You can find it in the main() function");
 	consoleColor("fg.white", "--------------------------------");
 
@@ -38,13 +44,13 @@ async function main() {
 	// );
 
 	// console.log("Working on [db/by_book] folder...");
-	// await handleByBookFolder();
+	await handleByBookFolder();
 	// console.log(
 	// 	`Done with [db/by_book] folder in ${(Date.now() - START_TIME) / 1000}s`
 	// );
 
 	// console.log("Deploying to MongoDB");
-	// await deployToMongoDB();
+	await deployToMongoDB();
 	// console.log(`Done MongoDB in ${(Date.now() - START_TIME) / 1000}s`);
 }
 
@@ -136,6 +142,7 @@ async function handleByBookFolder() {
 		const bookData: Prettify<BookFile> = {
 			id: book.id,
 			metadata: {
+				id: book.id,
 				length: 0,
 				arabic: {
 					title: book.arabic.title,
@@ -208,6 +215,8 @@ async function deployToMongoDB() {
 	const db = client.db("hadiths");
 
 	const hadiths = db.collection("hadiths");
+	const booksMetadata = db.collection("booksMetadata");
+	const chapters = db.collection("chapters");
 
 	const folders = await readdir(path.join(process.cwd(), "db", "by_book"));
 
@@ -236,7 +245,9 @@ async function deployToMongoDB() {
 				book
 			));
 
-			await hadiths.insertMany(bookData.hadiths);
+			await booksMetadata.insertOne(bookData.metadata);
+			// await hadiths.insertMany(bookData.hadiths);
+			await chapters.insertMany(bookData.chapters);
 
 			bar.update(index + 1, {
 				book: `${bookData.metadata.english.title}`,

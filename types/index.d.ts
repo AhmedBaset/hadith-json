@@ -45,11 +45,13 @@ interface ChapterFile {
 	chapter: Chapter | undefined;
 }
 
-interface BookMetadata extends Omit<ScrapedBook, "path" | "route"> {}
+interface BookMetadata extends Metadata {
+	id: number;
+}
 
 interface BookFile {
 	id: number;
-	metadata: Prettify<Metadata>;
+	metadata: Prettify<BookMetadata>;
 	chapters: Chapter[];
 	hadiths: Hadith[];
 }
