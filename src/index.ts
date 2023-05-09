@@ -44,13 +44,13 @@ async function main() {
 	// );
 
 	// console.log("Working on [db/by_book] folder...");
-	await handleByBookFolder();
+	// await handleByBookFolder();
 	// console.log(
 	// 	`Done with [db/by_book] folder in ${(Date.now() - START_TIME) / 1000}s`
 	// );
 
 	// console.log("Deploying to MongoDB");
-	await deployToMongoDB();
+	// await deployToMongoDB();
 	// console.log(`Done MongoDB in ${(Date.now() - START_TIME) / 1000}s`);
 }
 
