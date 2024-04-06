@@ -1,7 +1,7 @@
 {
 	"name": "hadith-json",
 	"description": "A comprehensive JSON-formatted database containing [Both Arabic and English] the Hadiths - the sayings and actions of Prophet Muhammed (PBUH) - is available, comprising 17 books of Hadiths including Sahih Bukhari, Sahih Muslim, Sunan Abu Dawud, Sunan Ibn Majah, Sunan Al-Nasa'i, Sunan Al-Tirmidhi, Muwatta Malik, Musnad Ahmad, Sunan Al-Darimi, Riyad Al-Salihin, Al-Adab Al-Mufrad, Bulugh Al-Maram, Al-Shamai'l Al-Muhammadiiah, Mishkat Al-Masabih, Al-Arbain Al-Nwa'wiyyah, Al-Arbain Al-Qudsiyyah, and Arbain Shah Waliullah.",
-	"version": "1.1.0",
+	"version": "1.2.0",
 	"main": "index.js",
 	"scripts": {
 		"dev": "tsup --watch",
