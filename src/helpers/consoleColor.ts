@@ -42,8 +42,8 @@ type Join<K, P> = K extends string | number
 type Leaves<T, D extends number = 10> = [D] extends [never]
 	? never
 	: T extends object
-	? { [K in keyof T]-?: Join<K, Leaves<T[K], Prev[D]>> }[keyof T]
-	: "";
+		? { [K in keyof T]-?: Join<K, Leaves<T[K], Prev[D]>> }[keyof T]
+		: "";
 
 /**
  * Custom console.log() with colors
@@ -58,4 +58,14 @@ export function consoleColor(color: Leaves<typeof colors>, text: string) {
 
 	// @ts-ignore
 	return console.log(colors[colorType][colorName], text, colors.reset);
+}
+
+export function style(color: Leaves<typeof colors>, text: string) {
+	if (!color) return text;
+	const [colorType, colorName] = color.split(".") as [
+		keyof typeof colors,
+		keyof (typeof colors)[keyof typeof colors],
+	];
+
+	return `${colors[colorType][colorName]}${text}${colors.reset}`;
 }

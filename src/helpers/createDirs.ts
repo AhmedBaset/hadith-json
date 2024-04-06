@@ -1,6 +1,6 @@
-import { existsSync } from "fs";
-import { mkdir } from "fs/promises";
-import path from "path";
+import { existsSync } from "node:fs";
+import { mkdir } from "node:fs/promises";
+import path from "node:path";
 
 /**
  * Create directories (e.g. db/the_9_books/bukhari)

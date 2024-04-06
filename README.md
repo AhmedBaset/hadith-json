@@ -114,6 +114,11 @@ interface Hadith {
 │   ...
 ```
 
+## Notes:
+
+- In Musnad Ahmed, the chapters from 8 to 30 are missing in the source data. If you know better source for this book, please let us know.
+- The source code for scraping in the `src` directory is not perfect. I wrote it when I was a beginner to practice scraping. It needs refactoring. (BTW, it works fine 😅)
+
 ## Contributing:
 
 Contributions are welcome. Please open an issue or a pull request.
