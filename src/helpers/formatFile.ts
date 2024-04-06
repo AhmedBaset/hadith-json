@@ -4,7 +4,7 @@ export function formatFile(
 		introduction?: Introduction | undefined;
 		hadiths: Hadith[];
 		chapter?: Chapter;
-	}
+	},
 ): Prettify<ChapterFile> {
 	const output: Prettify<ChapterFile> = {
 		metadata: {

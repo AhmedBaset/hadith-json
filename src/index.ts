@@ -1,70 +1,67 @@
-require("dotenv").config();
+import "dotenv/config";
 
+import { existsSync } from "node:fs";
+import { readdir } from "node:fs/promises";
+import path from "node:path";
+import { Presets, SingleBar } from "cli-progress";
 import { books } from "./books";
-import { scrapeData } from "./helpers/scrapeData";
+import { style } from "./helpers/consoleColor";
 import createDirs from "./helpers/createDirs";
 import createFile from "./helpers/createFile";
 import { formatFile } from "./helpers/formatFile";
-import { SingleBar, Presets } from "cli-progress";
-import { readdir } from "fs/promises";
-import path from "path";
-import { existsSync } from "fs";
-import { consoleColor } from "./helpers/consoleColor";
+import { scrapeData } from "./helpers/scrapeData";
 
-
-try {
-	main();
-} catch (error) {
-	console.trace(error);
-}
+main()
+	.catch((err) => {
+		console.error("\n", style("fg.red", err));
+	})
+	.finally(() => {
+		process.exit(1);
+	});
 
 async function main() {
 	const START_TIME = Date.now();
 
-	consoleColor("fg.white", "--------------------------------");
-	consoleColor("bg.cyan", "Welcome in the Hadith-DB-Scraper");
-	consoleColor("fg.blue", "--------------------------------");
-	consoleColor(
-		"fg.green",
-		"By default, You have to choose what functions to run"
+	console.log(
+		"\n",
+		"\t",
+		style(
+			"fg.cyan",
+			"In the name of Allah, the Most Gracious, the Most Merciful",
+		),
 	);
-	consoleColor(
-		"fg.magenta",
-		"Go to src/index.ts and uncomment the functions you want to run"
+	console.log();
+
+	console.log("Working on [db/by_chapter] folder...");
+	await createChaptersFiles();
+	console.log(
+		`Done with [db/by_chapter] folder in ${
+			(Date.now() - START_TIME) / 1000
+		}s\n`,
 	);
-	consoleColor("fg.yellow", "You can find it in the main() function");
-	consoleColor("fg.white", "--------------------------------");
 
-	// console.log("Working on [db/by_chapter] folder...");
-	// await handleByChapterFolder();
-	// console.log(
-	// 	`Done with [db/by_chapter] folder in ${
-	// 		(Date.now() - START_TIME) / 1000
-	// 	}s\n`
-	// );
-
-	// console.log("Working on [db/by_book] folder...");
-	// await handleByBookFolder();
-	// console.log(
-	// 	`Done with [db/by_book] folder in ${(Date.now() - START_TIME) / 1000}s`
-	// );
+	console.log("Working on [db/by_book] folder...");
+	await createBooksFromChapters();
+	console.log(
+		`Done with [db/by_book] folder in ${(Date.now() - START_TIME) / 1000}s`,
+	);
 
 	// console.log("Deploying to MongoDB");
 	// await deployToMongoDB();
 	// console.log(`Done MongoDB in ${(Date.now() - START_TIME) / 1000}s`);
 }
 
-async function handleByChapterFolder() {
+async function createChaptersFiles() {
 	//* For Each Book (Bukhari, Muslim, etc.)
 	for (const book of books) {
 		//* Create Progress Bar
 		const bar = new SingleBar(
 			{
-				format: `{value}/{total} | {bar} {percentage}% | {book}`,
+				format: "{value}/{total} | {bar} {percentage}% | {book}",
 				hideCursor: true,
 				stopOnComplete: true,
 			},
-			Presets.shades_classic
+			Presets.shades_classic,
 		);
 		bar.start(book.route.chapters.length, 0, { book: book.english.title });
 
@@ -85,49 +82,44 @@ async function handleByChapterFolder() {
 						"db",
 						"by_chapter",
 						...book.path,
-						`${index + 1}.json`
-					)
+						`${index + 1}.json`,
+					),
 				)
-			)
+			) {
 				continue;
+			}
 
 			//* Get Data From `${URL}/${book}/${chapter}`
-			const data = await scrapeData(
-				`${book.route.base}/${chapter}`,
-				book.id
-			);
-			if (!data)
+			const data = await scrapeData(`${book.route.base}/${chapter}`, book.id);
+			if (!data) {
 				return console.log(
 					"Error getting data",
-					`${book.route.base}/${chapter}`
+					`${book.route.base}/${chapter}`,
 				);
+			}
 
 			//* Format Data to be like {ChapterFile} interface
 			const formattedData = formatFile(book, data);
 
 			//* Create File {book}/${chapter}.json
-			await createFile(
-				["db", "by_chapter"],
-				book.path,
-				`${index + 1}`,
-				formattedData
-			);
+			await createFile(["db", "by_chapter"], book.path, chapter, formattedData);
 		}
 	}
 }
 
-async function handleByBookFolder() {
+async function createBooksFromChapters() {
 	let GENERAL_ID = 1;
 
 	for (const book of books) {
+		let idInBook = 1;
 		//* Create Progress Bar
 		const bar = new SingleBar(
 			{
-				format: `{value}/{total} | {bar} {percentage}% | {book}`,
+				format: "{value}/{total} | {bar} {percentage}% | {book}",
 				hideCursor: true,
 				stopOnComplete: true,
 			},
-			Presets.shades_classic
+			Presets.shades_classic,
 		);
 		bar.start(book.route.chapters.length, 0, { book: book.english.title });
 
@@ -135,7 +127,7 @@ async function handleByBookFolder() {
 			process.cwd(),
 			"db",
 			"by_chapter",
-			...book.path
+			...book.path,
 		);
 		const bookDirFiles: string[] = await readdir(bookDir);
 
@@ -159,18 +151,32 @@ async function handleByBookFolder() {
 			hadiths: [],
 		};
 
-		let idInBook = 1;
-		for (const [index, chapterFileName] of bookDirFiles.entries()) {
-			const chapterData: ChapterFile = require(path.join(
-				bookDir,
-				chapterFileName
-			));
+		for (const chapterFileName of bookDirFiles.sort()) {
+			const chapterData: ChapterFile = require(
+				path.join(bookDir, chapterFileName),
+			);
+
+			const chapterId = chapterData.chapter?.id;
+			if (typeof chapterId === "undefined") {
+				console.log(chapterData.chapter);
+
+				throw new Error(
+					`Chapter ID not found for chapter in ${book.path.join(
+						"/",
+					)}/${chapterFileName} file`,
+				);
+			}
+
+			const { arabic, english } = chapterData.chapter!;
+			if ([arabic, english].some((val) => typeof val === "undefined")) {
+				throw new Error("Missing some data in chapter file");
+			}
 
 			bookData.chapters.push({
-				id: index + 1,
+				id: chapterId,
 				bookId: book.id,
-				arabic: chapterData.chapter?.arabic || "",
-				english: chapterData.chapter?.english || "",
+				arabic,
+				english,
 			});
 
 			bookData.metadata.length += chapterData.metadata.length;
@@ -181,12 +187,12 @@ async function handleByBookFolder() {
 					id: GENERAL_ID++,
 					idInBook: idInBook++,
 					bookId: book.id,
-					chapterId: index + 1,
-				}))
+					chapterId: chapterId,
+				})),
 			);
 
 			//* Update Progress Bar
-			bar.update(index + 1, {
+			bar.update(chapterId, {
 				book: `${book.english.title} | ${chapterData.chapter?.english}`,
 			});
 		}
@@ -199,7 +205,7 @@ async function handleByBookFolder() {
 			["db", "by_book"],
 			book.path.slice(0, -1),
 			book.path.at(-1)!,
-			bookData
+			bookData,
 		);
 	}
 }
@@ -222,28 +228,24 @@ async function deployToMongoDB() {
 
 	const bar = new SingleBar(
 		{
-			format: `{value}/{total} | {bar} {percentage}% | {book}`,
+			format: "{value}/{total} | {bar} {percentage}% | {book}",
 			hideCursor: true,
 			stopOnComplete: true,
 		},
-		Presets.shades_classic
+		Presets.shades_classic,
 	);
 
 	for (const folder of folders) {
 		const books = await readdir(
-			path.join(process.cwd(), "db", "by_book", folder)
+			path.join(process.cwd(), "db", "by_book", folder),
 		);
 
 		bar.start(books.length, 0, { book: `${folder}` });
 
 		for (const [index, book] of books.entries()) {
-			const bookData: Prettify<BookFile> = require(path.join(
-				process.cwd(),
-				"db",
-				"by_book",
-				folder,
-				book
-			));
+			const bookData: Prettify<BookFile> = require(
+				path.join(process.cwd(), "db", "by_book", folder, book),
+			);
 
 			await booksMetadata.insertOne(bookData.metadata);
 			// await hadiths.insertMany(bookData.hadiths);

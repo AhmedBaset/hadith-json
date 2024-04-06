@@ -39,7 +39,6 @@ interface Metadata {
 }
 
 interface ChapterFile {
-	id?: number;
 	metadata: Prettify<Metadata>;
 	hadiths: Hadith[];
 	chapter: Chapter | undefined;

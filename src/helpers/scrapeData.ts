@@ -80,25 +80,21 @@ export async function scrapeData(route: string, bookId: number) {
 		.find(".book_page_english_name")
 		.text()
 		.trim();
-	if (englishTitle) {
-		output.introduction = {
-			arabic: introduction
-				.find(".book_page_arabic_name.arabic")
-				.text()
-				.trim()
-				.replace(/\[.*\]/g, ""),
-			english: englishTitle.replace(/\[.*\]/g, ""),
-		};
+	output.introduction = {
+		arabic: introduction
+			.find(".book_page_arabic_name.arabic")
+			.text()
+			.trim()
+			.replace(/\[.*\]/g, ""),
+		english: englishTitle.replace(/\[.*\]/g, ""),
+	};
 
-		output.chapter = {
-			id: +chapterInfo.id,
-			bookId,
-			arabic: chapterInfo.arabic,
-			english: chapterInfo.english,
-		};
-	} else {
-		// console.log("No Introduction ", `${route}`);
-	}
+	output.chapter = {
+		id: +chapterInfo.id,
+		bookId,
+		arabic: chapterInfo.arabic,
+		english: chapterInfo.english,
+	};
 
 	return output;
 }
