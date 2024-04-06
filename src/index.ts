@@ -102,7 +102,7 @@ async function createChaptersFiles() {
 			const formattedData = formatFile(book, data);
 
 			//* Create File {book}/${chapter}.json
-			await createFile(["db", "by_chapter"], book.path, chapter, formattedData);
+			await createFile(["db", "by_chapter"], book.path, chapter || "all", formattedData);
 		}
 	}
 }
