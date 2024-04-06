@@ -16,7 +16,7 @@ main()
 		console.error("\n", style("fg.red", err));
 	})
 	.finally(() => {
-		process.exit(1);
+		process.exit(0);
 	});
 
 async function main() {
@@ -151,7 +151,12 @@ async function createBooksFromChapters() {
 			hadiths: [],
 		};
 
-		for (const chapterFileName of bookDirFiles.sort()) {
+		for (const chapterFileName of bookDirFiles.sort((a, b) => {
+			const aNum = Number.parseInt(a.split(".")[0]);
+			const bNum = Number.parseInt(b.split(".")[0]);
+			return aNum - bNum;
+		
+		})) {
 			const chapterData: ChapterFile = require(
 				path.join(bookDir, chapterFileName),
 			);
