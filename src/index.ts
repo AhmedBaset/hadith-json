@@ -102,7 +102,12 @@ async function createChaptersFiles() {
 			const formattedData = formatFile(book, data);
 
 			//* Create File {book}/${chapter}.json
-			await createFile(["db", "by_chapter"], book.path, chapter || "all", formattedData);
+			await createFile(
+				["db", "by_chapter"],
+				book.path,
+				chapter || "all",
+				formattedData,
+			);
 		}
 	}
 }
@@ -155,7 +160,6 @@ async function createBooksFromChapters() {
 			const aNum = Number.parseInt(a.split(".")[0]);
 			const bNum = Number.parseInt(b.split(".")[0]);
 			return aNum - bNum;
-		
 		})) {
 			const chapterData: ChapterFile = require(
 				path.join(bookDir, chapterFileName),

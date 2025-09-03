@@ -1,8 +1,8 @@
-declare type Prettify<T> = {
+type Prettify<T> = {
 	[K in keyof T]: T[K];
 } & {};
 
-declare interface Hadith {
+interface Hadith {
 	id: number;
 	idInBook: number;
 	arabic: string;

@@ -1,4 +1,4 @@
-# Hadith-json Database [1.2.0]
+# Hadith Database in json
 
 Hadith is the second source of Islamic law after the Quran. It is the sayings and actions of Prophet Muhammed (PBUH).
 
@@ -8,7 +8,7 @@ An extensive JSON-formatted database is available, containing the Hadiths - Prop
 
 ## Hadiths Count:
 
--  Total Hadiths: 50,884 Hadiths.
+- Total Hadiths: 50,884 Hadiths.
 
 ## Books included:
 
@@ -32,11 +32,11 @@ An extensive JSON-formatted database is available, containing the Hadiths - Prop
 
 ## Stack:
 
--  Node.js
--  TypeScript
--  Cheerio.js
--  Axios
--  cli-progress
+- Node.js
+- TypeScript
+- Cheerio.js
+- Axios
+- cli-progress
 
 ## Data Source:
 
@@ -56,24 +56,36 @@ Every Hadih is an object with the following format:
 
 ```typescript
 interface Hadith {
-	id: number;
-	chapterId: number;
-	bookId: number;
-	arabic: string;
-	english: {
-		narrator: string;
-		text: string;
-	};
+  id: number;
+  chapterId: string;
+  bookId: number;
+  arabic: string;
+  english: {
+    narrator: string;
+    text: string;
+  };
 }
 ```
 
+> [!Warning]
+> If you fetch the hadiths directly from GitHub, ensure you reference a specific commit or tag rather than the main branch, as the data format may change over time.
+>
+> ✅ https://github.com/AhmedBaset/hadith-json/blob/v1.2.0/db/by_chapter/the_9_books/bukhari/1.json
+>
+> ❌ https://github.com/AhmedBaset/hadith-json/blob/main/db/by_chapter/the_9_books/bukhari/1.json
+>
+> ```diff
+> - https://github.com/AhmedBaset/hadith-json/blob/main/db/by_chapter/the_9_books/bukhari/1.json
+> + https://github.com/AhmedBaset/hadith-json/blob/v1.2.0/db/by_chapter/the_9_books/bukhari/1.json
+> ```
+
 ## Commands:
 
--  `npm install` - Installs the dependencies.
--  `npm run build` - Compiles the TypeScript files to JavaScript.
--  `npm run start` - Starts the script that scrapes the data from Sunnah.com.
--  `npm run dev:build` - Compiles the TypeScript files to JavaScript in watch mode.
--  `npm run dev:start` - Starts the script that scrapes the data from Sunnah.com in watch mode.
+- `npm install` - Installs the dependencies.
+- `npm run build` - Compiles the TypeScript files to JavaScript.
+- `npm run start` - Starts the script that scrapes the data from Sunnah.com.
+- `npm run dev:build` - Compiles the TypeScript files to JavaScript in watch mode.
+- `npm run dev:start` - Starts the script that scrapes the data from Sunnah.com in watch mode.
 
 ## Project Structure:
 
