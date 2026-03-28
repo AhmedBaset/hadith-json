@@ -57,7 +57,7 @@ Every Hadih is an object with the following format:
 ```typescript
 interface Hadith {
   id: number;
-  chapterId: string;
+  chapterId: number;
   bookId: number;
   arabic: string;
   english: {
@@ -84,8 +84,6 @@ interface Hadith {
 - `npm install` - Installs the dependencies.
 - `npm run build` - Compiles the TypeScript files to JavaScript.
 - `npm run start` - Starts the script that scrapes the data from Sunnah.com.
-- `npm run dev:build` - Compiles the TypeScript files to JavaScript in watch mode.
-- `npm run dev:start` - Starts the script that scrapes the data from Sunnah.com in watch mode.
 
 ## Project Structure:
 
