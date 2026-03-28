@@ -1,128 +1,95 @@
-# Hadith-json Database [1.2.0]
+# hadith-json
 
-Hadith is the second source of Islamic law after the Quran. It is the sayings and actions of Prophet Muhammed (PBUH).
+A comprehensive JSON database of **50,884 hadiths** — the sayings and actions of Prophet Muhammad ﷺ — in both Arabic and English, scraped from [Sunnah.com](https://sunnah.com/) and covering 17 canonical books.
 
-An extensive JSON-formatted database is available, containing the Hadiths - Prophet Muhammed's (PBUH) sayings and actions - in both Arabic and English. The database encompasses 17 books of Hadiths.
+## Books
 
-قاعدة بيانات شاملة بصيغة JSON، تحتوي على الأحاديث النبوية الشريفة باللغتين العربية والإنجليزية. تشمل القاعدة 17 كتاباً من كتب السنة النبوية.
+| # | English | Arabic |
+|---|---------|--------|
+| 1 | Sahih al-Bukhari | صحيح البخاري |
+| 2 | Sahih Muslim | صحيح مسلم |
+| 3 | Sunan Abi Dawud | سنن أبي داود |
+| 4 | Jami` at-Tirmidhi | جامع الترمذي |
+| 5 | Sunan an-Nasa'i | سنن النسائي |
+| 6 | Sunan Ibn Majah | سنن ابن ماجه |
+| 7 | Muwatta Malik | موطأ مالك |
+| 8 | Musnad Ahmad | مسند أحمد |
+| 9 | Sunan ad-Darimi | سنن الدارمي |
+| 10 | Riyad as-Salihin | رياض الصالحين |
+| 11 | Shamail al-Muhammadiyah | الشمائل المحمدية |
+| 12 | Bulugh al-Maram | بلوغ المرام |
+| 13 | Al-Adab Al-Mufrad | الأدب المفرد |
+| 14 | Mishkat al-Masabih | مشكاة المصابيح |
+| 15 | The Forty Hadith of al-Nawawi | الأربعون النووية |
+| 16 | The Forty Hadith Qudsi | الأربعون القدسية |
+| 17 | The Forty Hadith of Shah Waliullah | أربعون الشاه ولي الله |
 
-## Hadiths Count:
+## Data Format
 
--  Total Hadiths: 50,884 Hadiths.
-
-## Books included:
-
-1. Sahih al-Bukhari صحيح البخاري
-1. Sahih Muslim صحيح مسلم
-1. Sunan Abi Dawud سنن أبي داود
-1. Jami` at-Tirmidhi جامع الترمذي
-1. Sunan an-Nasa'i سنن النسائي
-1. Sunan Ibn Majah سنن ابن ماجه
-1. Muwatta Malik موطأ مالك
-1. Musnad Ahmad مسند أحمد
-1. Sunan ad-Darimi سنن الدارمي
-1. Riyad as-Salihin رياض الصالحين
-1. Shamail al-Muhammadiyah الشمائل المحمدية
-1. Bulugh al-Maram بلوغ المرام
-1. Al-Adab Al-Mufrad الأدب المفرد
-1. Mishkat al-Masabih مشكاة المصابيح
-1. The Forty Hadith of al-Imam an-Nawawi الأربعون النووية
-1. The Forty Hadith Qudsi الأربعون القدسية
-1. The Forty Hadith of Shah Waliullah أربعون الشاه ولي الله
-
-## Stack:
-
--  Node.js
--  TypeScript
--  Cheerio.js
--  Axios
--  cli-progress
-
-## Data Source:
-
-The data was scrapped from [Sunnah.com](https://sunnah.com/), and was converted to JSON format using a custom script. All scripts are available in the `src` folder.
-
-## Data Format:
-
-The data is available in two formats:
-
-1. By Book: The Hadiths are grouped by book. See all Books in the [`db/by_book`](./db/by_book) folder.
-1. By Chapter: The Hadiths are grouped by chapter. See all Chapters in the [`db/by_chapter`](./db/by_chapter) folder.
-1. Next INSHALLAH will add more formats.
-
-See all Types in the [`types/index.d.ts`](./types/index.d.ts) file.
-
-Every Hadih is an object with the following format:
+Each hadith follows this TypeScript interface:
 
 ```typescript
 interface Hadith {
-	id: number;
-	chapterId: number;
-	bookId: number;
-	arabic: string;
-	english: {
-		narrator: string;
-		text: string;
-	};
+  id: number;
+  chapterId: number;
+  bookId: number;
+  arabic: string;
+  english: {
+    narrator: string;
+    text: string;
+  };
 }
 ```
 
-## Commands:
+The database is available in two layouts under the `db/` folder:
 
--  `npm install` - Installs the dependencies.
--  `npm run build` - Compiles the TypeScript files to JavaScript.
--  `npm run start` - Starts the script that scrapes the data from Sunnah.com.
--  `npm run dev:build` - Compiles the TypeScript files to JavaScript in watch mode.
--  `npm run dev:start` - Starts the script that scrapes the data from Sunnah.com in watch mode.
+- **`db/by_book/`** — one JSON file per book
+- **`db/by_chapter/`** — one JSON file per chapter within each book
 
-## Project Structure:
+See [`types/index.d.ts`](./types/index.d.ts) for all type definitions.
+
+> [!WARNING]
+> Pin to a specific tag when fetching files directly from GitHub — the data format may change on `main`.
+>
+> ✅ `https://github.com/AhmedBaset/hadith-json/blob/v1.2.0/db/by_chapter/the_9_books/bukhari/1.json`  
+> ❌ `https://github.com/AhmedBaset/hadith-json/blob/main/db/by_chapter/the_9_books/bukhari/1.json`
+
+## Projects Using This Data
+
+<!-- - [App Name](https://github.com/username/app-name) — description of app. [GitHub](https://github.com/username/app-name) | [Website](https://app-name.com) | [App Store](https://apps.apple.com/app-name) -->
+
+> Using this dataset in your project? [Open a pull request](https://github.com/AhmedBaset/hadith-json/edit/main/README.md) to add it to the list!
+
+## Project Structure
 
 ```
 .
-├── db
-│   ├── by_book
-│   │   │   ├── the_9_books
-│   │   │   │   ├── bukhari.json
-│   │   │   │   ├── muslim.json
-│   │   │   │   ├── ...
-│   │   │   ├── forties
-│   │   │   │   ├── nawawi40.json
-│   │   │   │   ├── ...
-│   │   │   ├── ...
-│   ├── by_chapter
-│   │   ├── the_9_books
-│   │   │   ├── bukhari
-│   │   │   │   ├── 1.json
-│   │   │   │   ├── 2.json
-│   │   │   │   ├── ...
-│   │   │   ├── muslim
-│   │   │   │   ├── ...
-│   │   │   ├── ...
-│   │   ├── forties
-│   │   │   ├── nawawi40
-│   │   │   │   ├── 1.json
-│   │   │   │   ...
-│   │   │   other_books
-│   │   │   │   RyadSalihin
-│   │   │   │   │   ├── 1.json
-│   │   ...
-│   ├── by_book
-│   src
-│   │   ├── index.ts
-│   │   ├── types
-│   │   ├── helpers
-│   ...
+├── db/
+│   ├── by_book/
+│   │   ├── the_9_books/        # bukhari.json, muslim.json, ...
+│   │   ├── forties/            # nawawi40.json, ...
+│   │   └── other_books/
+│   └── by_chapter/
+│       ├── the_9_books/        # bukhari/1.json, muslim/1.json, ...
+│       ├── forties/            # nawawi40/1.json, ...
+│       └── other_books/        # RyadSalihin/1.json, ...
+├── src/
+│   ├── index.ts
+│   ├── types/
+│   └── helpers/
+└── types/
+    └── index.d.ts
 ```
 
-## Notes:
+## Known Limitations
 
-- In Musnad Ahmed, the chapters from 8 to 30 are missing in the source data. If you know better source for this book, please let us know.
-- The source code for scraping in the `src` directory is not perfect. I wrote it when I was a beginner to practice scraping. It needs refactoring. (BTW, it works fine 😅)
+- **Musnad Ahmad**: Chapters 8–30 are missing from the source data on Sunnah.com. If you know of a better source, please open an issue.
+- The scraping code in `src/` was written as a learning exercise and could use some refactoring — though it works fine as-is.
 
-## Contributing:
+## Contributing
 
-Contributions are welcome. Please open an issue or a pull request.
+Contributions are welcome! Feel free to open an issue or pull request for data corrections, new formats, or code improvements.
 
-## Conclusion:
+---
 
-May Allah accept this work and make it beneficial for all Muslims. Ameen.
+*May Allah accept this work and make it beneficial. Ameen.*
