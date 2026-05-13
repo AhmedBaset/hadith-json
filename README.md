@@ -30,11 +30,13 @@ Each hadith follows this TypeScript interface:
 
 ```typescript
 interface Hadith {
-  id: number;
-  chapterId: number;
-  bookId: number;
-  arabic: string;
-  english: {
+  hadith_id : number;
+  chapter_no: number;
+  book_no: number;
+book_name:
+collection:sahih al_bukhari;
+  text_arabic: string;
+  text_english: {
     narrator: string;
     text: string;
   };
